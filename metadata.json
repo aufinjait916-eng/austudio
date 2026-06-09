@@ -1,0 +1,6 @@
+{
+  "name": "Au Design Studio",
+  "description": "Professional Lifestyle Photo Generator",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,38 @@
+# --- Build Stage ---
+FROM node:22-alpine AS builder
+
+WORKDIR /app
+
+# Copy dependency specifications
+COPY package*.json ./
+
+# Install all dependencies (including devDependencies) to compile code
+RUN npm ci
+
+# Copy all project source files and configuration
+COPY . .
+
+# Execute Vite static bundle compile and esbuild node backend bundler
+RUN npm run build
+
+# --- Production Stage ---
+FROM node:22-alpine AS runner
+
+WORKDIR /app
+
+# Configure environmental production presets
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Copy manifests and run clean installer for only essential npm dependencies
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy built production targets from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Map container's routing port
+EXPOSE 3000
+
+# Execute server startup command directly with Node engine
+CMD ["node", "dist/server.cjs"]

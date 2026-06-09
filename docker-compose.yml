@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  designer-studio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: au-design-studio
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
